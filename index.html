@@ -35,7 +35,7 @@ td.sel{outline:2px solid var(--gr);outline-offset:-2px}
 td.n{text-align:right}
 #ed{display:none}
 @media print{header,.tb,.fx,nav,.fab{display:none!important}.paper{box-shadow:none;margin:0}}
-.paper td,.paper th{background:#fff;color:#111;border:1px solid #444}.paper img{max-width:100%}.tb select{flex:none;font:inherit;padding:6px;border-radius:10px;border:1px solid var(--ln);background:var(--card);color:var(--tx)}.sw{height:calc(100vh - 250px)}@media print{.sw{height:auto!important;overflow:visible!important}}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script><script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script></head><body>
+.paper td,.paper th{background:#fff;color:#111;border:1px solid #444}.paper img{max-width:100%}.tb select{flex:none;font:inherit;padding:6px;border-radius:10px;border:1px solid var(--ln);background:var(--card);color:var(--tx)}.sw{height:calc(100vh - 250px);position:relative}.sw th{z-index:3}.lay td{white-space:pre-wrap;word-break:break-word;vertical-align:middle;min-width:0;overflow:hidden;height:auto;line-height:1.25;font-size:13px}.lay th{min-width:0}@media print{.sw{height:auto!important;overflow:visible!important}}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script><script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script></head><body>
 <header><button id="back" style="display:none">←</button><h1 id="ttl">KantorSaku</h1><button id="pdf" style="display:none">Ekspor</button></header>
 
 <div id="home"><div class="crumb" id="crumb"></div><div style="padding:0 14px"><input id="q" placeholder="🔍 Cari file…" style="width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--ln);background:var(--card);color:var(--tx)"></div><div class="grid" id="grid"></div>
@@ -49,7 +49,7 @@ td.n{text-align:right}
 <button onclick="cmd('insertUnorderedList')">• Daftar</button><button onclick="cmd('insertOrderedList')">1. Daftar</button>
 <button onclick="cmd('fontSize',5)">A+</button><button onclick="cmd('fontSize',3)">A−</button><button onclick="cmd('foreColor','#d33')">🔴</button><button onclick="insImg()">🖼️ Gambar</button><button onclick="insTbl()">▦ Tabel</button><button onclick="insChart()">📈 Grafik</button></div>
 <div id="doc" class="paper" contenteditable="true"></div>
-<div id="sp" style="display:none"><div class="tb"><input type="color" id="bgc" value="#ffe08a" style="width:40px;height:34px;padding:0;border:0;flex:none"><button onclick="fmt('bg')">🎨 Latar</button><button onclick="fmt('bd')">▦ Garis</button><button onclick="fmt('b')"><b>B</b></button><button onclick="fmt('nf','cur')">Rp</button><button onclick="fmt('nf','pct')">%</button><button onclick="fmt('nf','dec')">0,00</button><button onclick="fmt('nf','')">Umum</button><button onclick="fmt('clr')">✖ Format</button><button onclick="chart('bar')">📊 Grafik</button><button onclick="cp()">⎘ Salin</button><button onclick="ps()">📥 Tempel</button></div><div class="fx"><b>fx</b><input id="fx" placeholder="Ketik angka atau =SUM(A1:A3)" enterkeyhint="done"></div><div class="sw" id="sw"></div><div class="tb" id="stabs"></div></div>
+<div id="sp" style="display:none"><div class="tb"><input type="color" id="bgc" value="#ffe08a" style="width:40px;height:34px;padding:0;border:0;flex:none"><button onclick="fmt('bg')">🎨 Latar</button><button onclick="fmt('bd')">▦ Garis</button><button onclick="fmt('b')"><b>B</b></button><button onclick="fmt('nf','cur')">Rp</button><button onclick="fmt('nf','pct')">%</button><button onclick="fmt('nf','dec')">0,00</button><button onclick="fmt('nf','')">Umum</button><button onclick="fmt('clr')">✖ Format</button><button onclick="chart('bar')">📊 Grafik</button><button onclick="sImg()">🖼️ Gambar</button><button onclick="cp()">⎘ Salin</button><button onclick="ps()">📥 Tempel</button></div><div class="fx"><b>fx</b><input id="fx" placeholder="Ketik angka atau =SUM(A1:A3)" enterkeyhint="done"></div><div class="sw" id="sw"></div><div class="tb" id="stabs"></div></div>
 </div>
 
 <div class="sheet" id="sh"><div>
@@ -108,7 +108,7 @@ function grid(){let h='<table><tr><th></th>';for(let c=0;c<C;c++)h+='<th>'+col(c
 for(let r=1;r<=R;r++){h+='<tr><th>'+r+'</th>';for(let c=0;c<C;c++){const id=col(c)+r;h+='<td data-id="'+id+'"></td>'}h+='</tr>'}
 $('sw').innerHTML=h+'</table>';paint();
 $('sw').querySelectorAll('td').forEach(td=>td.onclick=()=>{sel=td.dataset.id;$('fx').value=cells[sel]||'';paint();$('fx').focus()})}
-function paint(){$('sw').querySelectorAll('td').forEach(td=>{const id=td.dataset.id,v=val(id),f=(cur.fmt||{})[id]||{};td.textContent=fv(v,f.nf);td.style.background=f.bg||'';td.style.color=f.bg?'#111':'';td.style.border=f.bd?'2px solid #222':'';td.style.fontWeight=f.b?'700':'';
+function paint(){$('sw').querySelectorAll('td').forEach(td=>{const id=td.dataset.id,v=val(id),f=(cur.fmt||{})[id]||{};td.textContent=fv(v,f.nf);td.style.background=f.bg||'';td.style.color=f.bg?'#111':'';td.style.border=f.bd?'1.5px solid #222':'';td.style.textAlign=f.al==='c'?'center':'';td.style.fontWeight=f.b?'700':'';
 td.className=(id===sel?'sel ':'')+(typeof v==='number'?'n':'')})}
 $('fx').oninput=()=>{if(!sel)return;if($('fx').value==='')delete cells[sel];else cells[sel]=$('fx').value;cur.cells=cells;save();paint()};
 function val(id,seen=[]){const raw=cells[id];if(raw==null||raw==='')return'';
@@ -175,7 +175,7 @@ lab.forEach((l,i)=>{g+='<text x="'+(L+bw*i+bw/2)+'" y="'+(H-14)+'" font-size="10
 ser.forEach((s,k)=>{if(t==='line')g+='<polyline fill="none" stroke="'+cl[k%4]+'" stroke-width="2.5" points="'+s.map((v,i)=>(L+bw*i+bw/2)+','+(10+ph-ph*v/mx)).join(' ')+'"/>';else s.forEach((v,i)=>{const w=bw*0.8/ser.length;g+='<rect x="'+(L+bw*i+bw*0.1+w*k)+'" y="'+(10+ph-ph*v/mx)+'" width="'+w+'" height="'+(ph*v/mx)+'" fill="'+cl[k%4]+'"/>'})});
 const p=$('ex').firstElementChild;p.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%">'+g+'</svg><div style="display:flex;gap:8px"><button onclick="chart(\'bar\',1)" style="flex:1">📊 Batang</button><button onclick="chart(\'line\',1)" style="flex:1">📈 Garis</button></div>';$('ex').classList.add('on')}
 function exXlsx(){const wb=XLSX.utils.book_new(),keep=cells;cur.sh.forEach((S,si)=>{cells=S.cells;const ws={};let mr=1,mc=0;for(const a in cells){const m=a.match(/^([A-Z])(\d+)$/);if(!m)continue;const r=cells[a],v=val(a);ws[a]=r[0]==='='?{t:typeof v==='number'?'n':'s',f:r.slice(1),v}:(typeof v==='number'?{t:'n',v}:{t:'s',v:r});mr=Math.max(mr,+m[2]);mc=Math.max(mc,m[1].charCodeAt(0)-65)}ws['!ref']='A1:'+col(mc)+mr;XLSX.utils.book_append_sheet(wb,ws,((S.n||'').replace(/[\\\/?*\[\]:]/g,'').slice(0,31))||'Sheet'+(si+1))});cells=keep;dl(cur.name+'.xlsx',new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})]))}
-$('fi').onchange=async()=>{const f=$('fi').files[0];$('fi').value='';if(!f)return;const ext=f.name.split('.').pop().toLowerCase(),name=f.name.replace(/\.[^.]+$/,'');try{if(ext==='docx'){const r=await mammoth.convertToHtml({arrayBuffer:await f.arrayBuffer()});db.items.push({id:uid(),type:'doc',name,parent:dir,html:clean(r.value)})}else if(ext==='json'){const j=JSON.parse(await f.text());if(!Array.isArray(j.items))throw 0;const ids=new Set(db.items.map(i=>i.id));j.items.forEach(i=>{if(i&&i.id&&!ids.has(i.id))db.items.push(i)})}else{const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});const sh=wb.SheetNames.map(nm=>{const ws=wb.Sheets[nm],cs={};for(const a in ws){const m=a.match(/^([A-Z])(\d+)$/);if(!m||+m[2]>R||m[1].charCodeAt(0)-65>=C)continue;const c=ws[a];cs[a]=c.f?'='+c.f:String(c.v)}return{n:nm.slice(0,20),cells:cs,fmt:{}}});db.items.push({id:uid(),type:'sheet',name,parent:dir,sh,ai:0})}save();render()}catch(e){alert('Gagal membaca file.')}};
+$('fi').onchange=async()=>{const f=$('fi').files[0];$('fi').value='';if(!f)return;const ext=f.name.split('.').pop().toLowerCase(),name=f.name.replace(/\.[^.]+$/,'');try{if(ext==='docx'){const r=await mammoth.convertToHtml({arrayBuffer:await f.arrayBuffer()});db.items.push({id:uid(),type:'doc',name,parent:dir,html:clean(r.value)})}else if(ext==='json'){const j=JSON.parse(await f.text());if(!Array.isArray(j.items))throw 0;const ids=new Set(db.items.map(i=>i.id));j.items.forEach(i=>{if(i&&i.id&&!ids.has(i.id))db.items.push(i)})}else{const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});const sh=wb.SheetNames.map(nm=>{const ws=wb.Sheets[nm],cs={};for(const a in ws){const m=a.match(/^([A-Z])(\d+)$/);if(!m||+m[2]>R||m[1].charCodeAt(0)-65>=C)continue;const c=ws[a];cs[a]=c.f?'='+c.f:String(c.v)}return mkSh(nm,ws,cs)});db.items.push({id:uid(),type:'sheet',name,parent:dir,sh,ai:0})}save();render()}catch(e){alert('Gagal membaca file.')}};
 
 function chartPng(save){const s=window._svg.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="340" height="220" font-family="Arial,Helvetica,sans-serif" ').replace(/currentColor/g,'#111');const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=1020;c.height=660;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,1020,660);x.drawImage(im,0,0,1020,660);window._img=c.toDataURL('image/png');if(save)c.toBlob(b=>dl('grafik.png',b))};im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)}
 const _chart=chart;chart=function(t,k){_chart(t,k);const sv=$('ex').querySelector('svg');if(!sv)return;window._svg=sv.outerHTML;chartPng(0);$('ex').firstElementChild.insertAdjacentHTML('beforeend','<button onclick="chartPng(1)">💾 Simpan gambar (PNG)</button>')};
@@ -207,7 +207,7 @@ const TPL=[
 {g:TG3,n:'Surat Izin Tidak Masuk',t:'doc',h:'<p>[Kota], [tanggal]</p><p>Kepada Yth.<br>[Bapak/Ibu ...]<br>di tempat</p><p>Dengan hormat,</p><p>Saya yang bertanda tangan di bawah ini:<br>Nama : [Nama]<br>Kelas/Jabatan : [isi]</p><p>Dengan ini saya memberitahukan bahwa saya tidak dapat masuk pada tanggal [tanggal] karena [alasan]. Saya mohon izin dan berjanji akan menyelesaikan tugas yang tertinggal.</p><p>Demikian surat ini saya buat. Atas pengertiannya, saya ucapkan terima kasih.</p><p>Hormat saya,<br><br><br>([Nama])</p>'}
 ];
 function tpl(){$('sh').classList.remove('on');const p=$('ex').firstElementChild;p.style.cssText='max-height:80vh;overflow:auto';p.innerHTML='';let g='';TPL.forEach(t=>{if(t.g!==g){g=t.g;const d=document.createElement('div');d.textContent=g;d.style.cssText='font-weight:700;margin-top:6px';p.appendChild(d)}const b=document.createElement('button');b.textContent=(t.t==='sheet'?'📊 ':'📄 ')+t.n;b.onclick=()=>{$('ex').classList.remove('on');useTpl(t)};p.appendChild(b)});$('ex').classList.add('on')}
-function useTpl(t){const it={id:uid(),type:t.t,name:t.n,parent:dir};if(t.t==='doc')it.html=t.h;else{const cs={},fm={};t.r.forEach((r,i)=>r.forEach((v,j)=>{if(v!=='')cs[col(j)+(i+1)]=String(v)}));const nc=Math.max(...t.r.map(r=>r.length));fm.A1={b:true};for(let j=0;j<nc;j++)fm[col(j)+t.hr]={bg:'#cfe3fb',b:true};(t.cur||[]).forEach(c=>{for(let r=t.hr+1;r<=t.r.length;r++)fm[c+r]={nf:'cur'}});Object.assign(fm,t.fm||{});it.sh=[{n:'Sheet1',cells:cs,fmt:fm}];it.ai=0}db.items.push(it);save();render();open(it)}
+function useTpl(t){const it={id:uid(),type:t.t,name:t.n,parent:dir};if(t.t==='doc')it.html=t.h;else if(t.lay){const o=mkLay(t.lay);it.sh=[{n:'Sheet1',cells:o.cells,fmt:o.fmt,m:o.m,cw:o.cw,rh:o.rh,im:[]}];it.ai=0}else{const cs={},fm={};t.r.forEach((r,i)=>r.forEach((v,j)=>{if(v!=='')cs[col(j)+(i+1)]=String(v)}));const nc=Math.max(...t.r.map(r=>r.length));fm.A1={b:true};for(let j=0;j<nc;j++)fm[col(j)+t.hr]={bg:'#cfe3fb',b:true};(t.cur||[]).forEach(c=>{for(let r=t.hr+1;r<=t.r.length;r++)fm[c+r]={nf:'cur'}});Object.assign(fm,t.fm||{});it.sh=[{n:'Sheet1',cells:cs,fmt:fm}];it.ai=0}db.items.push(it);save();render();open(it)}
 
 const tb=(rows,hd,lab)=>'<table style="border-collapse:collapse;width:100%">'+rows.map((r,ri)=>'<tr>'+r.map((c,i)=>'<td style="border:1px solid #444;padding:6px"><p>'+((hd&&ri===0)||(lab&&i===0)?'<b>'+c+'</b>':c)+'</p></td>').join('')+'</tr>').join('')+'</table>';
 const P=t=>'<p>'+t+'</p>',H=t=>'<h3>'+t+'</h3>',UL=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>',blank=(n,m)=>Array.from({length:n},()=>Array(m).fill('[isi]'));
@@ -232,9 +232,9 @@ let dropN=0,mrg=0;
 async function impFile(f){const ext=f.name.split('.').pop().toLowerCase(),name=f.name.replace(/\.[^.]+$/,'');dropN=0;mrg=0;try{
 if(ext==='docx'){const r=await mammoth.convertToHtml({arrayBuffer:await f.arrayBuffer()});db.items.push({id:uid(),type:'doc',name,parent:dir,html:clean(r.value)})}
 else if(ext==='json'){const j=JSON.parse(await f.text());if(!Array.isArray(j.items))throw 0;const ids=new Set(db.items.map(i=>i.id));j.items.forEach(i=>{if(i&&i.id&&!ids.has(i.id))db.items.push(i)})}
-else{const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});const sh=wb.SheetNames.map(nm=>{const ws=wb.Sheets[nm],cs={};if(ws['!merges']&&ws['!merges'].length)mrg=1;for(const a in ws){const m=a.match(/^([A-Z]+)(\d+)$/);if(!m)continue;if(m[1].length>1||+m[2]>R||m[1].charCodeAt(0)-65>=C){dropN++;continue}const c=ws[a];cs[a]=c.f?'='+c.f:String(c.v)}return{n:nm.slice(0,20),cells:cs,fmt:{}}});db.items.push({id:uid(),type:'sheet',name,parent:dir,sh,ai:0})}
+else{const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});const sh=wb.SheetNames.map(nm=>{const ws=wb.Sheets[nm],cs={};if(ws['!merges']&&ws['!merges'].length)mrg=1;for(const a in ws){const m=a.match(/^([A-Z]+)(\d+)$/);if(!m)continue;if(m[1].length>1||+m[2]>R||m[1].charCodeAt(0)-65>=C){dropN++;continue}const c=ws[a];cs[a]=c.f?'='+c.f:String(c.v)}return mkSh(nm,ws,cs)});db.items.push({id:uid(),type:'sheet',name,parent:dir,sh,ai:0})}
 save();render();
-if(dropN||mrg)alert('Catatan: '+(dropN?dropN+' sel di luar kolom A-Z / baris '+R+' tidak ikut. ':'')+(mrg?'Sel gabungan, warna, dan gambar dari file asli tidak ikut diimpor.':''))
+if(dropN||mrg)alert('Catatan: '+(dropN?dropN+' sel di luar kolom A-Z / baris '+R+' tidak ikut. ':'')+(mrg?'Warna, border, dan gambar dari file asli tidak ikut diimpor (sel gabungan dan lebar kolom ikut).':''))
 }catch(e){alert('Gagal membaca file.')}}
 $('fi').onchange=()=>{const f=$('fi').files[0];$('fi').value='';if(f)impFile(f)};
 async function loadShared(){try{if(!/shared=1/.test(location.search))return;const c=await caches.open('kantorsaku-share'),k=new URL('shared-file',location.href).href,r=await c.match(k);if(!r)return;const nm=decodeURIComponent(r.headers.get('x-name')||'dibagikan.xlsx'),b=await r.blob();await c.delete(k);history.replaceState(null,'',location.pathname);await impFile(new File([b],nm))}catch(e){}}
@@ -267,6 +267,95 @@ window.addEventListener('popstate',()=>{hd=Math.max(0,hd-1);goBack()});
 $('back').onclick=()=>{if(hd>0)history.back();else goBack()};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&cur)saveCur()});
 function about(){const p=$('ex').firstElementChild;p.style.cssText='max-height:80vh;overflow:auto';p.innerHTML='<b>KantorSaku v1.2</b><div>Dokumen, spreadsheet, dan pengelola file di HP.</div><div><b>Privasi:</b> semua file disimpan hanya di perangkat Anda (browser). Tidak ada akun, iklan, atau pelacak, dan file Anda tidak dikirim ke server. Pustaka (SheetJS, mammoth, docx) dimuat dari CDN saat pertama kali dibuka.</div><div><b>Penting:</b> menghapus data browser atau aplikasi akan menghapus file Anda. Gunakan <b>Cadangan</b> secara berkala.</div><div><b>Tips rumus:</b> gunakan koma sebagai pemisah argumen, misalnya =SUM(A1:A3). Angka 1.000 dibaca seribu dan 1,5 dibaca satu koma lima.</div><button onclick="$(\'ex\').classList.remove(\'on\')">Tutup</button>';$('ex').classList.add('on')}
+
+/*LAYOUT-START*/
+function mkLay(sp){const cells={},fmt={},m=[],rh={},mx=Math.max(...sp.rows.map(x=>x[2]));
+const FL={t:{bg:'#bcd4f2',b:true,al:'c'},l:{bg:'#e6eefa',b:true,al:'c'},s:{bg:'#dfe6ef',b:true,al:'c'},f:{bg:'#f3f6fb'},c:{al:'c'}};
+sp.rows.forEach(([r1,c1,r2,c2,t,k])=>{if(t)cells[col(c1)+r1]=t;if(r2>r1||c2>c1)m.push([r1,c1,r2,c2]);const f=Object.assign({bd:true},...[...(k||'')].map(x=>FL[x]));for(let r=r1;r<=r2;r++)for(let c=c1;c<=c2;c++)fmt[col(c)+r]=Object.assign({},f)});
+for(let r=1;r<=mx;r++)rh[r]=(sp.rh||{})[r]||sp.dh||32;
+const cw={};sp.cw.forEach((w,i)=>cw[col(i)]=w);return{cells,fmt,m,cw,rh}}
+const ex=(a,b,f)=>rr(a,b,f).flat();
+const dtj='[th]年[bln]月';
+const JPX={cw:[78,...Array(11).fill(54)],dh:34,rh:{1:48,6:46,21:46,28:46,30:84},rows:[
+[1,0,1,7,'特定技能履歴書\n(Riwayat Hidup)','t'],[1,8,1,11,'番号 (Nomor)\n[isi]','l'],
+[2,0,2,0,'氏名\nNama','l'],[2,1,2,7,'[Nama sesuai paspor]'],[2,8,7,11,'[Foto 3x4]\n(tombol 🖼️ Gambar)','sc'],
+[3,0,3,0,'フリガナ\nBacaan','l'],[3,1,3,7,'[ナマエ]'],
+[4,0,4,0,'生年月日\nTgl lahir','l'],[4,1,4,3,'[th]年 [bln]月 [tgl]日'],[4,4,4,4,'年齢\nUsia','l'],[4,5,4,5,'[usia]歳'],[4,6,4,6,'配偶者\nStatus','l'],[4,7,4,7,'☐未婚 ☐既婚'],
+[5,0,5,0,'性別\nJenis kelamin','l'],[5,1,5,1,'[L/P]'],[5,2,5,2,'血液型\nGol. darah','l'],[5,3,5,3,'[ ]'],[5,4,5,4,'身長\nTinggi','l'],[5,5,5,5,'[ ] cm'],[5,6,5,6,'体重\nBerat','l'],[5,7,5,7,'[ ] kg'],
+[6,0,6,0,'国籍\nKewarganegaraan','l'],[6,1,6,7,'インドネシア (Indonesia)'],
+[7,0,7,0,'住所\nAlamat','l'],[7,1,7,7,'[Alamat lengkap]'],
+[8,0,12,0,'学歴\nRiwayat pendidikan','l'],[8,1,8,2,'入学 (Masuk)','s'],[8,3,8,4,'卒業 (Lulus)','s'],[8,5,8,9,'学校名 (Nama sekolah)','s'],[8,10,8,11,'区分','s'],
+...ex(9,12,r=>[[r,1,r,2,dtj],[r,3,r,4,dtj],[r,5,r,9,['[Nama SD]','[Nama SMP]','[Nama SMA/SMK]','[Nama kampus, jika ada]'][r-9]],[r,10,r,11,['小学校 (SD)','中学校 (SMP)','高校 (SMA/SMK)','大学 (Kuliah)'][r-9]]]),
+[13,0,16,0,'職歴\nRiwayat kerja','l'],[13,1,13,2,'入社 (Masuk)','s'],[13,3,13,4,'退社 (Keluar)','s'],[13,5,13,11,'会社名 (Nama perusahaan)','s'],
+...ex(14,16,r=>[[r,1,r,2,dtj],[r,3,r,4,dtj],[r,5,r,11,'[Perusahaan '+(r-13)+']']]),
+[17,0,18,0,'資格・免許\nSertifikat / SIM','l'],[17,1,17,11,'[Contoh: JFT-Basic A2, skor ...]'],[18,1,18,11,'[SIM C / lainnya]'],
+[19,0,19,0,'電話\nTelepon','l'],[19,1,19,6,'[Nomor HP]'],[19,7,19,8,'在留資格\nStatus tinggal','l'],[19,9,19,11,'[isi atau -]'],
+[20,0,20,0,'メール\nEmail','l'],[20,1,20,6,'[Email]'],[20,7,20,8,'趣味\nHobi','l'],[20,9,20,11,'[Hobi]'],
+[21,0,21,0,'過去の出入国\nKeluar-masuk Jepang','l'],[21,1,21,11,'[isi atau -]'],
+[22,0,25,0,'家族全員\nKeluarga','l'],[22,1,22,5,'氏名 (Nama)','s'],[22,6,22,7,'関係 (Hubungan)','s'],[22,8,22,9,'年齢 (Usia)','s'],[22,10,22,11,'職業 (Pekerjaan)','s'],
+...ex(23,25,r=>[[r,1,r,5,'[Nama]'],[r,6,r,7,'[hubungan]'],[r,8,r,9,'[usia]'],[r,10,r,11,'[pekerjaan]']]),
+[26,0,26,0,'新パスポート','s'],[26,1,26,3,'喫煙 (Merokok)','s'],[26,4,26,5,'飲酒 (Alkohol)','s'],[26,6,26,7,'宗教 (Agama)','s'],[26,8,26,9,'作業服 (Baju kerja)','s'],[26,10,26,11,'靴 (Sepatu)','s'],
+[27,0,27,0,'[ada/belum]','c'],[27,1,27,3,'[ya/tidak]','c'],[27,4,27,5,'[ya/tidak]','c'],[27,6,27,7,'[Agama]','c'],[27,8,27,9,'[S/M/L/XL]','c'],[27,10,27,11,'[ukuran]','c'],
+[28,0,28,0,'日本へ行く目的\nTujuan ke Jepang','l'],[28,1,28,11,'[Tujuan Anda]'],
+[29,0,29,0,'性格\nKarakter','l'],[29,1,29,11,'[Deskripsi karakter]'],
+[30,0,30,0,'メモ\nCatatan','l'],[30,1,30,11,'[Ringkasan pengalaman kerja]'],
+[31,0,31,11,'添付 (Lampiran): sisipkan foto sertifikat JFT-Basic di bawah baris ini (tombol 🖼️ Gambar)','s']]};
+const MDX={cw:Array(12).fill(58),dh:32,rh:{1:30,2:30},rows:[
+[1,0,2,11,'[NAMA LENGKAP]\n[Posisi yang dilamar]','tc'],
+[3,0,3,3,'KONTAK','s'],[4,0,6,3,'[No. HP]\n[Email]\n[Kota]','f'],[7,0,7,3,'KETERAMPILAN','s'],[8,0,12,3,'• [Keterampilan 1]\n• [Keterampilan 2]\n• [Keterampilan 3]','f'],[13,0,13,3,'BAHASA','s'],[14,0,16,3,'• [Bahasa - tingkat]','f'],
+[3,4,3,11,'PROFIL','s'],[4,4,7,11,'[2-3 kalimat tentang diri Anda]'],[8,4,8,11,'PENGALAMAN KERJA','s'],[9,4,12,11,'[Posisi] - [Perusahaan] ([Tahun])\n• [Tugas / pencapaian]\n• [Tugas / pencapaian]'],[13,4,16,11,'[Posisi] - [Perusahaan] ([Tahun])\n• [Tugas / pencapaian]'],
+[17,0,17,11,'PENDIDIKAN','s'],[18,0,20,11,'[Sekolah/Kampus] - [Jurusan] ([Tahun])']]};
+const PBX={cw:[78,...Array(11).fill(54)],dh:32,rh:{1:40},rows:[
+[1,0,1,11,'CURRICULUM VITAE','tc'],
+[2,0,2,0,'Nama','l'],[2,1,2,7,'[isi]'],[2,8,7,11,'[Foto 3x4]\n(tombol 🖼️ Gambar)','sc'],
+...ex(3,7,r=>[[r,0,r,0,['Tempat, tgl lahir','Jenis kelamin / status','Alamat','No. HP','Pendidikan terakhir'][r-3],'l'],[r,1,r,7,'[isi]']]),
+[8,0,8,0,'Tinggi / Berat','l'],[8,1,8,3,'[ ] cm / [ ] kg'],[8,4,8,5,'Baju / Sepatu','l'],[8,6,8,11,'[ ] / [ ]'],
+[9,0,9,11,'PENGALAMAN KERJA','s'],
+[10,0,10,3,'Perusahaan','s'],[10,4,10,6,'Posisi','s'],[10,7,10,9,'Periode','s'],[10,10,10,11,'Alasan keluar','s'],
+...ex(11,13,r=>[[r,0,r,3,'[isi]'],[r,4,r,6,'[isi]'],[r,7,r,9,'[isi]'],[r,10,r,11,'[isi]']]),
+[14,0,14,11,'KETERAMPILAN & SERTIFIKAT','s'],[15,0,16,11,'[Mesin / produksi / packing / QC / forklift]\n[Sertifikat / SIM]'],
+[17,0,17,11,'KESIAPAN KERJA','s'],[18,0,18,5,'Siap shift / lembur: [ya/tidak]'],[18,6,18,11,'Siap di luar kota: [ya/tidak]'],[19,0,19,11,'Bisa mulai bekerja: [tanggal]'],
+[20,0,20,11,'REFERENSI','s'],[21,0,21,11,'[Nama, jabatan, no. HP]']]};
+const FRX={cw:Array(12).fill(58),dh:32,rh:{1:40},rows:[
+[1,0,1,11,'CURRICULUM VITAE','tc'],[2,0,2,11,'[Nama lengkap] | [No. HP] | [Email] | [Kota]','fc'],
+[3,0,3,11,'TUJUAN KARIER','s'],[4,0,5,11,'[Fresh graduate yang ingin berkontribusi sebagai ...]'],
+[6,0,6,11,'PENDIDIKAN','s'],[7,0,7,5,'[Kampus/Sekolah], [Jurusan]'],[7,6,7,8,'[Tahun masuk] - [Tahun lulus]'],[7,9,7,11,'IPK/Nilai: [isi]'],
+[8,0,8,11,'PENGALAMAN ORGANISASI / MAGANG','s'],[9,0,11,11,'[Organisasi/tempat magang], [jabatan], [tahun]\n• [kegiatan utama]'],
+[12,0,12,11,'PELATIHAN & SERTIFIKAT','s'],[13,0,14,11,'• [Nama pelatihan], [penyelenggara], [tahun]'],
+[15,0,15,11,'KETERAMPILAN','s'],[16,0,17,11,'• [Keterampilan 1]\n• [Keterampilan 2]'],
+[18,0,18,11,'PRESTASI','s'],[19,0,19,11,'[Prestasi, jika ada]'],
+[20,0,20,11,'REFERENSI','s'],[21,0,21,11,'[Nama, jabatan, no. HP]']]};
+TPL.push({g:TG4,n:'CV Format Jepang (Excel)',t:'sheet',lay:JPX},{g:TG3,n:'CV Modern 2 Kolom (Excel)',t:'sheet',lay:MDX},{g:TG3,n:'CV Pekerja Pabrik / Lapangan (Excel)',t:'sheet',lay:PBX},{g:TG3,n:'CV Lulusan Baru (Excel)',t:'sheet',lay:FRX});
+TPL.sort((a,b)=>GO.indexOf(a.g)-GO.indexOf(b.g));
+function mkSh(nm,ws,cs){const mg=(ws['!merges']||[]).filter(g=>g.e.r<R&&g.e.c<C).map(g=>[g.s.r+1,g.s.c,g.e.r+1,g.e.c]),cw={},rh={};(ws['!cols']||[]).forEach((x,i)=>{if(x&&i<C){const w=x.wpx||(x.wch?Math.round(x.wch*7):0);if(w)cw[col(i)]=w}});(ws['!rows']||[]).forEach((x,i)=>{if(x&&(x.hpx||x.hpt)&&i<R)rh[i+1]=Math.round(x.hpx||x.hpt*1.33)});const o={n:nm.slice(0,20),cells:cs,fmt:{},m:mg};if(Object.keys(cw).length)o.cw=cw;if(Object.keys(rh).length)o.rh=rh;return o}
+function grid(){const S=cur.sh[cur.ai],M=S.m||[],cw=S.cw,rh=S.rh||{},cov={},top={};
+M.forEach(([r1,c1,r2,c2])=>{top[col(c1)+r1]=[r2-r1+1,c2-c1+1];for(let r=r1;r<=r2;r++)for(let c=c1;c<=c2;c++)if(r!==r1||c!==c1)cov[col(c)+r]=1});
+let w=34;if(cw)for(let c=0;c<C;c++)w+=cw[col(c)]||74;
+let h='<table'+(cw?' class="lay" style="table-layout:fixed;width:'+w+'px"><colgroup><col style="width:34px">'+Array.from({length:C},(_,c)=>'<col style="width:'+(cw[col(c)]||74)+'px">').join('')+'</colgroup>':'>')+'<tr><th></th>';
+for(let c=0;c<C;c++)h+='<th>'+col(c)+'</th>';h+='</tr>';
+for(let r=1;r<=R;r++){h+='<tr'+(rh[r]?' style="height:'+rh[r]+'px"':'')+'><th>'+r+'</th>';for(let c=0;c<C;c++){const id=col(c)+r;if(cov[id])continue;const t=top[id];h+='<td data-id="'+id+'"'+(t?' rowspan="'+t[0]+'" colspan="'+t[1]+'"':'')+'></td>'}h+='</tr>'}
+$('sw').innerHTML=h+'</table>';paint();
+$('sw').querySelectorAll('td').forEach(td=>td.onclick=()=>{sel=td.dataset.id;$('fx').value=cells[sel]||'';paint();$('fx').focus()});
+requestAnimationFrame(imgs)}
+function imgs(){const S=cur&&cur.sh&&cur.sh[cur.ai];if(!S)return;const p=$('sw');p.querySelectorAll('.simg').forEach(e=>e.remove());const pr=p.getBoundingClientRect();(S.im||[]).forEach((o,i)=>{const td=p.querySelector('td[data-id="'+o.a+'"]');if(!td)return;const r=td.getBoundingClientRect(),im=document.createElement('img');im.className='simg';im.src=o.d;im.style.cssText='position:absolute;z-index:2;object-fit:contain;background:#fff;left:'+(r.left-pr.left+p.scrollLeft)+'px;top:'+(r.top-pr.top+p.scrollTop)+'px;width:'+o.w+'px;height:'+o.h+'px';im.onclick=()=>{if(confirm('Hapus gambar ini dari lembar?')){S.im.splice(i,1);save();imgs()}};p.appendChild(im)})}
+function sImg(){if(!cur||cur.type!=='sheet')return;const a=sel||'A1',i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=()=>{const f=i.files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);const td=$('sw').querySelector('td[data-id="'+a+'"]'),mg=td&&(td.colSpan>1||td.rowSpan>1),r=td?td.getBoundingClientRect():{width:150,height:150};let w=mg?Math.round(r.width):300,h=mg?Math.round(r.height):Math.min(500,Math.round(300*im.height/im.width));const S=cur.sh[cur.ai];(S.im=S.im||[]).push({a,w,h,d:c.toDataURL('image/jpeg',0.82)});save();imgs()};im.onerror=()=>alert('Gambar tidak bisa dibaca.');im.src=u};i.click()}
+const _x0=exXlsx;
+exXlsx=async function(){let E=window.ExcelJS;
+if(!E){try{await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});E=window.ExcelJS}catch(e){E=null}}
+if(!E)return _x0();
+const keep=cells;try{const wb=new E.Workbook(),NF={cur:'"Rp" #,##0',pct:'0%',dec:'#,##0.00'};
+cur.sh.forEach((S,si)=>{cells=S.cells;const ws=wb.addWorksheet(((S.n||'').replace(/[\\\/?*\[\]:]/g,'').slice(0,31))||'Sheet'+(si+1)),cw=S.cw||{},rh=S.rh||{},fm=S.fmt||{};
+for(let c=0;c<C;c++)ws.getColumn(c+1).width=Math.round((cw[col(c)]||74)/7);
+Object.keys(rh).forEach(r=>{ws.getRow(+r).height=Math.round(rh[r]*0.75)});
+let mr=1,mc=1;[...Object.keys(cells),...Object.keys(fm)].forEach(a=>{const m=a.match(/^([A-Z])(\d+)$/);if(m){mr=Math.max(mr,+m[2]);mc=Math.max(mc,m[1].charCodeAt(0)-64)}});
+for(let r=1;r<=mr;r++)for(let c=1;c<=mc;c++){const a=col(c-1)+r,raw=cells[a],f=fm[a];if((raw==null||raw==='')&&!f)continue;const cell=ws.getCell(r,c);
+if(raw!=null&&raw!==''){const v=val(a);cell.value=raw[0]==='='?{formula:raw.slice(1),result:v}:(typeof v==='number'?v:raw)}
+if(f){if(f.bg)cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF'+f.bg.slice(1).toUpperCase()}};if(f.b)cell.font={bold:true};if(f.bd){const b={style:'thin'};cell.border={top:b,left:b,bottom:b,right:b}};if(f.nf&&NF[f.nf])cell.numFmt=NF[f.nf]}
+if(S.cw)cell.alignment={vertical:'middle',wrapText:true,horizontal:f&&f.al==='c'?'center':undefined};else if(f&&f.al==='c')cell.alignment={horizontal:'center'}}
+(S.m||[]).forEach(([r1,c1,r2,c2])=>ws.mergeCells(r1,c1+1,r2,c2+1));
+(S.im||[]).forEach(o=>{const m=o.a.match(/^([A-Z])(\d+)$/);if(!m)return;const id=wb.addImage({base64:o.d,extension:'jpeg'});ws.addImage(id,{tl:{col:m[1].charCodeAt(0)-65,row:+m[2]-1},ext:{width:o.w,height:o.h}})})});
+const buf=await wb.xlsx.writeBuffer();cells=keep;dl(cur.name+'.xlsx',new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}))}catch(e){cells=keep;_x0()}};
+/*LAYOUT-END*/
 
 function initDB(){return new Promise(res=>{let done=false;const fin=()=>{if(!done){done=true;res()}};setTimeout(fin,3000);
 try{const rq=indexedDB.open('kantorsaku',1);rq.onupgradeneeded=()=>{rq.result.createObjectStore('kv')};rq.onerror=rq.onblocked=fin;
